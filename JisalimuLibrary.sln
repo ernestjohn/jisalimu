@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JisalimuLibrary", "JisalimuLibrary\JisalimuLibrary.csproj", "{2C51D6FB-1AEF-47E6-A9B5-2E1899C842BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JisalimuOnline", "JisalimuOnline\JisalimuOnline.csproj", "{B50A6163-F4AF-4DA1-921A-94E621117322}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HospitalsIndexer", "HospitalsIndexer\HospitalsIndexer.csproj", "{B8E2B08F-FD28-468B-9CDE-AF12DC2C0457}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C51D6FB-1AEF-47E6-A9B5-2E1899C842BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C51D6FB-1AEF-47E6-A9B5-2E1899C842BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C51D6FB-1AEF-47E6-A9B5-2E1899C842BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C51D6FB-1AEF-47E6-A9B5-2E1899C842BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B50A6163-F4AF-4DA1-921A-94E621117322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B50A6163-F4AF-4DA1-921A-94E621117322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B50A6163-F4AF-4DA1-921A-94E621117322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B50A6163-F4AF-4DA1-921A-94E621117322}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8E2B08F-FD28-468B-9CDE-AF12DC2C0457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E2B08F-FD28-468B-9CDE-AF12DC2C0457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E2B08F-FD28-468B-9CDE-AF12DC2C0457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E2B08F-FD28-468B-9CDE-AF12DC2C0457}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
