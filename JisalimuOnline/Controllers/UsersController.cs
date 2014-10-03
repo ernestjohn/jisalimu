@@ -8,30 +8,61 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using JisalimuLibrary.Models;
 using JisalimuOnline.Models;
-using JisalimuLibrary.ViewModels;
 using Nest;
+using JisalimuOnline.ViewModels;
 
 namespace JisalimuOnline.Controllers
 {
      [RoutePrefix("api/v1/users")]
     public class UsersController : ApiController
     {
-        private JisalimuContext db = new JisalimuContext();
-        Uri node = new Uri("http://quintelelastic.cloudapp.net");
-        ConnectionSettings settings = new ConnectionSettings(node);
-        public ElasticClient client = new ElasticClient(settings);
+         private JisalimuContext db = new JisalimuContext();
 
         [Route("")]
         [HttpGet]
         // GET: api/Users
         public IQueryable<User> GetUser()
         {
-            //client.Search<User>(q => q.Query(c => c.Term(t => t.)))
+            Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
 
-            return db.User;
+            ConnectionSettings settings = new ConnectionSettings(
+              node,
+              defaultIndex: "jisalimu"
+          );
+
+            ElasticClient client = new ElasticClient(settings);
+
+            var result = client.Search<User>(q =>
+                q.From(0)
+                .Size(200)
+                .MatchAll());
+            
+            
+            return result.Documents.AsQueryable();
         }
+
+         [Route("trigger")]
+         [HttpPost]
+        public IHttpActionResult ProcessTrigger(Trigger trigger)
+        {
+            PerformTrigger(trigger);
+            return Ok("Trigger successfully sent");
+        }
+
+         public void PerformTrigger(Trigger myTrigger)
+         {
+             Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+
+             ConnectionSettings settings = new ConnectionSettings(
+               node,
+               defaultIndex: "jisalimu"
+           );
+
+             ElasticClient client = new ElasticClient(settings);
+
+             client.Index<Trigger>(myTrigger);
+         }
 
         [Route("{id}")]
         [HttpGet]
@@ -39,11 +70,26 @@ namespace JisalimuOnline.Controllers
         [ResponseType(typeof(User))]
         public IHttpActionResult GetUser(string id)
         {
+            Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+
+            ConnectionSettings settings = new ConnectionSettings(
+              node,
+              defaultIndex: "jisalimu"
+          );
+
+            ElasticClient client = new ElasticClient(settings);
+
+            string QUERY = "";
+            var results = client.Search<User>(q => q.QueryRaw(QUERY));
+
+            //////////////////////////////
             User user = db.User.Find(id);
             if (user == null)
             {
                 return NotFound();
             }
+
+            var user_results = results.Documents;
 
             return Ok(user);
         }
@@ -52,10 +98,21 @@ namespace JisalimuOnline.Controllers
         [HttpPost]
          public IHttpActionResult Login(LoginViewModel viewModel )
         {
-            var user = db.User.FirstOrDefault(u => u.email == viewModel.email && u.password == viewModel.password);
-            if (user != null)
+
+            Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+
+            ConnectionSettings settings = new ConnectionSettings(
+              node,
+              defaultIndex: "jisalimu"
+          );
+
+            ElasticClient client = new ElasticClient(settings);
+
+            var res = client.Search<User>(q => q.Query( t => t.Term("email",viewModel.email) && t.Term("password",viewModel.password)));
+            //var user = db.User.FirstOrDefault(u => u.email == viewModel.email && u.password == viewModel.password);
+            if (res.Documents != null)
 	        {
-                return Ok(user);
+                return Ok(res.Documents);
 	        }
             else
             {
@@ -105,7 +162,16 @@ namespace JisalimuOnline.Controllers
         [ResponseType(typeof(User))]
         public IHttpActionResult PostUser(RegisterViewModel viewModel)
         {
-            JisalimuLibrary.Models.User newuser = new JisalimuLibrary.Models.User();
+             Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+
+          ConnectionSettings settings = new ConnectionSettings(
+            node,
+            defaultIndex: "jisalimu"
+        );
+
+         ElasticClient client = new ElasticClient(settings);
+
+            JisalimuOnline.Models.User newuser = new JisalimuOnline.Models.User();
             newuser.userid = Guid.NewGuid().ToString();
             newuser.firstname = viewModel.firstname;
             newuser.lastname = viewModel.lastname;
@@ -120,7 +186,7 @@ namespace JisalimuOnline.Controllers
             client.Index<User>(newuser);
             client.Refresh();
 
-            db.User.Add(newuser);
+            //db.User.Add(newuser);
 
 
             try
@@ -157,6 +223,7 @@ namespace JisalimuOnline.Controllers
 
             return Ok(user);
         }
+
 
         protected override void Dispose(bool disposing)
         {

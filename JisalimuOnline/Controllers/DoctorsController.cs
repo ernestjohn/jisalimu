@@ -9,7 +9,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using JisalimuLibrary.Models;
 using JisalimuOnline.Models;
 
 namespace JisalimuOnline.Controllers
