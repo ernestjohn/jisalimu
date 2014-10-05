@@ -18,7 +18,7 @@ namespace JisalimuOnline.Controllers
         [HttpGet]
         public IHttpActionResult GetHospitals(double latitude, double longitude, double distance)
         {
-           var  node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+           var  node = new Uri("http://jisalimu.cloudapp.net:9200/", UriKind.Absolute);
 
          var settings = new ConnectionSettings(
             node,
@@ -48,7 +48,7 @@ namespace JisalimuOnline.Controllers
         [HttpGet]
         public IHttpActionResult GetHospitalsUser(double latitude, double longitude, double distance, string userid)
         {
-            var node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+            var node = new Uri("http://jisalimu.cloudapp.net:9200/", UriKind.Absolute);
 
             var settings = new ConnectionSettings(
                node,

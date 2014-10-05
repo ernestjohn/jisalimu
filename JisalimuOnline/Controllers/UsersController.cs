@@ -24,7 +24,7 @@ namespace JisalimuOnline.Controllers
         // GET: api/Users
         public IQueryable<User> GetUser()
         {
-            Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+            Uri node = new Uri("http://jisalimu.cloudapp.net:9200/", UriKind.Absolute);
 
             ConnectionSettings settings = new ConnectionSettings(
               node,
@@ -52,7 +52,7 @@ namespace JisalimuOnline.Controllers
 
          public void PerformTrigger(Trigger myTrigger)
          {
-             Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+             Uri node = new Uri("http://jisalimu.cloudapp.net:9200/", UriKind.Absolute);
 
              ConnectionSettings settings = new ConnectionSettings(
                node,
@@ -70,7 +70,7 @@ namespace JisalimuOnline.Controllers
         [ResponseType(typeof(User))]
         public IHttpActionResult GetUser(string id)
         {
-            Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+            Uri node = new Uri("http://jisalimu.cloudapp.net:9200/", UriKind.Absolute);
 
             ConnectionSettings settings = new ConnectionSettings(
               node,
@@ -99,7 +99,7 @@ namespace JisalimuOnline.Controllers
          public IHttpActionResult Login(LoginViewModel viewModel )
         {
 
-            Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+            Uri node = new Uri("http://jisalimu.cloudapp.net:9200/", UriKind.Absolute);
 
             ConnectionSettings settings = new ConnectionSettings(
               node,
@@ -112,7 +112,8 @@ namespace JisalimuOnline.Controllers
             //var user = db.User.FirstOrDefault(u => u.email == viewModel.email && u.password == viewModel.password);
             if (res.Documents != null)
 	        {
-                return Ok(res.Documents);
+                
+                return Ok(res.Documents.FirstOrDefault());
 	        }
             else
             {
@@ -156,13 +157,21 @@ namespace JisalimuOnline.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+
+         [Route("register")]
+         [HttpGet]
+         public IHttpActionResult RegisterSample()
+            {
+                RegisterViewModel viewmodel = new RegisterViewModel();
+                return Ok(viewmodel);
+            }
         // POST: api/Users
         [Route("register")]
         [HttpPost]
         [ResponseType(typeof(User))]
         public IHttpActionResult PostUser(RegisterViewModel viewModel)
         {
-             Uri node = new Uri("http://quintelelastic.cloudapp.net:9200/", UriKind.Absolute);
+             Uri node = new Uri("http://jisalimu.cloudapp.net:9200/", UriKind.Absolute);
 
           ConnectionSettings settings = new ConnectionSettings(
             node,
@@ -181,6 +190,9 @@ namespace JisalimuOnline.Controllers
             newuser.gender = viewModel.gender;
             newuser.date_of_birth = viewModel.date_of_birth;
             newuser.register_date = DateTime.Today.ToString();
+            newuser.first_contact = viewModel.first_contact;
+            newuser.second_contact = viewModel.second_contact;
+            newuser.third_contact = viewModel.third_contact;
 
             //Try to index the user into the database
             client.Index<User>(newuser);
@@ -188,22 +200,6 @@ namespace JisalimuOnline.Controllers
 
             //db.User.Add(newuser);
 
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                if (UserExists(newuser.userid))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
 
             return Ok(newuser);
         }
